@@ -1,176 +1,56 @@
-//! Keywords
-const address = "India";
-// console.log(address)
+import http, { request } from "http";
+import express from "express";
+import {Request, Response} from "express";
+import { baseRouter } from "./routes/base.routes";
+import { userRouter } from "./routes/user.routes";
 
-let marks = 50.0;
-// console.log(marks)
+//! NODE JS
 
-var username = "Abhishvek";
-// console.log(username)
+//! Basic server
 
-//! var vs let
-// for(var i = 0;i < 10; i ++){
-//     console.log(i) //! Not a blocked scope variable
-// }
-// console.log(i)
+/* http.createServer((req, res) => {
+    res.write("Hello Nodejs_Express");
+    res.end();
+}).listen(8080) */
 
-// for(let i = 0;i < 10; i ++){
-//     console.log(i) //! Blocked scope variable
-// }
-// console.log(i)
+//! server with header
+/* http.createServer((req, res)=>{
+    res.writeHead(200, {
+        "Content-Type" : "text/html",
+    });
+    res.write("Hello once again in nodejs_expreee branch");
+    res.end();
+}).listen(8000); */
 
-//! Basic types
+//! One more Server Read Strings(query)
 
-//1.strings
-let dogname: string = "Bruno";
-// console.log(dogname)
+/* http.createServer((req, res)=>{
+    res.writeHead(200, {
+        "Content-Type" : "text/html",
+    });
+    res.write(req.url);
+    res.end();
+}).listen(8000); */
 
-//2.numbers => All the numbers (int , double, complex, float)
-let myMarks: number = 100.0;
-// console.log(myMarks)
+//! Express Js Part
 
-//3. boolean => False/True (Try to declare them with "is")
-let isSleeping: boolean = false;
-// isSleeping = true
-// console.log(isSleeping)
+const app = express();
+const port = 8008;
 
-//! Complex types
-//4.Arrays => List of data
-let subjects: number[];
-subjects = [55, 56, 57];
-// console.log(subjects)
+app.use(express.json());
+app.use(express.urlencoded({ extended: false}));
 
-//5.Maps
-let slots = new Map();
-slots.set("name", "Abhishvek");
-slots.set("job", "Programmer");
+app.set("port", port);
 
-// console.log(slots.get("name"))
-// console.log(slots.get("job"))
+app.use("/", baseRouter);
+app.use("/", userRouter );
+/* app.get("/home", (req: Request, res: Response) =>{
+    res.json({
+        name: "Learn Backend for App developement as a profi !",
+    });
+}); */
 
-//! Union type
-let myCustomUnionType: string | number | boolean | boolean[];
-// let userc = myCustomUnionType
-myCustomUnionType = 55;
-// myCustomUnionType = [false]
-// console.log(myCustomUnionType)
-myCustomUnionType = "55";
-// console.log(myCustomUnionType)
-myCustomUnionType = false;
-// console.log(myCustomUnionType)
+app.listen(app.get("port"), ()=> {
+    console.log(`Server is rocking over ${app.get("port")}`);
 
-//! Any type
-let car: any;
-car = 55;
-car = "55";
-car = [55, 55, 55];
-// console.log(car)
-
-//! Custom types
-type userData = string | number | boolean; //UID
-let userA: userData;
-let userB: userData;
-userA = 55;
-userA = "55";
-userA = false;
-userB = 56;
-userB = "56";
-// console.log(userA)
-
-//! Functions
-
-//Basic function
-function doAddition(x: number, y: number): number {
-  return x + y;
-}
-// console.log(doAddition(5, 100));
-
-//Default parameter
-function callMe(name: string, age: number = 20): void {
-  console.log(`${name} has age of ${age}`);
-}
-
-// callMe("Abhishvek");
-
-//Optional parameter
-function callMeLater(name: string, age?: number): void {
-  console.log(`${name} has age of ${age}`);
-}
-
-// callMeLater("Abhishvek");
-
-//! Class
-class Car {
-  //Members/Variables
-  model: string;
-  engine: string;
-  price: number;
-
-  constructor(x: string, y: string, z: number) {
-    this.model = x;
-    this.engine = y;
-    this.price = z;
-  }
-
-  carData() {
-    return `This car has ${this.model} has ${this.engine} with a price of ${this.price}`;
-  }
-}
-
-const car1 = new Car("Audi", "MAKVB78", 1000);
-// console.log(car1.carData())
-const car2 = new Car("Merceders", "UIviao", 1500);
-// console.log(car2.carData())
-
-//!Interfaces
-
-interface DogData {
-  //! DRY
-  dogname: string;
-  dogage: number;
-}
-
-let dog1: DogData = {
-  dogage: 2,
-  dogname: "Bruno",
-};
-
-let dog2: DogData = {
-  dogname: "Lucy",
-  dogage: 4,
-};
-
-interface Products {
-  product_name: string;
-  product_price: number;
-  product_image: string;
-  product_desc: string;
-}
-let product1: Products = {
-  product_desc: "aoibaoibv",
-  product_image: "abiofaoivb",
-  product_name: " oaifboif",
-  product_price: 161,
-};
-
-// console.log(dog2.dogage);
-
-//! SPECIAL KEYWORDS => PICK , OMIT
-interface PizzaData {
-  size: string;
-  grams: number;
-  service: number;
-}
-
-type Pizza1 = Pick<PizzaData, "size">;
-
-let cheesePizza: Pizza1 = {
-  size: "large",
-};
-
-type Pizza2 = Omit<PizzaData, "size">;
-let beaconPizza: Pizza2 = {
-  grams: 55,
-  service: 100,
-};
-//console.log(beaconPizza.grams)
+})
