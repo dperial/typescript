@@ -1,8 +1,10 @@
 import http, { request } from "http";
 import express from "express";
 import {Request, Response} from "express";
-import { baseRouter } from "./routes/base.routes";
-import { userRouter } from "./routes/user.routes";
+import { todoRouter } from "./routes/todo.routes";
+import { ConnectionOptions, createConnection } from "typeorm";
+import  config  from "./ormconfig";
+import "reflect-metadata";
 
 //! NODE JS
 
@@ -34,23 +36,42 @@ import { userRouter } from "./routes/user.routes";
 
 //! Express Js Part
 
-const app = express();
-const port = 8008;
+createConnection(config as ConnectionOptions).then( async (connection: { isConnected: any; }) => {
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: false}));
+    if(connection.isConnected) {
+        console.log("Postgres is conected");
 
-app.set("port", port);
+    }
+    const app = express();
+    const port = 8000;
 
-app.use("/", baseRouter);
-app.use("/", userRouter );
+    app.use(express.json());
+    app.use(express.urlencoded({ extended: false}));
+
+    app.set("port", port);
+
+    app.use("/todo", todoRouter);
+
+    app.listen(app.get("port"), ()=> {
+        console.log(`Server is rocking over ${app.get("port")}`);
+    });
+}).catch((error: any) => {
+    console.log(error);
+
+})
+
+
 /* app.get("/home", (req: Request, res: Response) =>{
     res.json({
         name: "Learn Backend for App developement as a profi !",
     });
 }); */
 
-app.listen(app.get("port"), ()=> {
-    console.log(`Server is rocking over ${app.get("port")}`);
 
-})
+
+//! TYPEORM
+// 1.Entity => Models than we create under flutter
+// 2. Repository => Rapper Class for our Entity, where we create some method EX: CRUD operation
+// 3.Controller => Classes which use our entire code of body, than will be perform some action
+// 4.Routes=>
+// 5.Ormconfig => Configuration file for our typeORM
