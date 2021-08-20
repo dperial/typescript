@@ -5,6 +5,8 @@ import { todoRouter } from "./routes/todo.routes";
 import { ConnectionOptions, createConnection } from "typeorm";
 import  config  from "./ormconfig";
 import "reflect-metadata";
+import { authRouter } from "./routes/auth.routes";
+import { userInfoRouter } from "./routes/user_info.route";
 
 //! NODE JS
 
@@ -51,6 +53,8 @@ createConnection(config as ConnectionOptions).then( async (connection: { isConne
     app.set("port", port);
 
     app.use("/todo", todoRouter);
+    app.use("/auth", authRouter);
+    app.use("/userinfo", userInfoRouter);
 
     app.listen(app.get("port"), ()=> {
         console.log(`Server is rocking over ${app.get("port")}`);

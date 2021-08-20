@@ -19,3 +19,10 @@ export class TodoEntity extends BaseEntity {
 
 }
 
+//! Relations PG
+/*
+1. 1 to 1
+2. Many to 1
+3. 1 to Many
+4. Many to Many
+*/
